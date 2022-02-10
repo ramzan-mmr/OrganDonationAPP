@@ -13,7 +13,7 @@ import Login from "../screens/Login";
 import Welcome from "../screens/Welcome";
 
 //Animator 
-import Animated from "react-native-reanimated";
+import Animated, { color } from "react-native-reanimated";
 
 // Vector icon 
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -45,6 +45,7 @@ const DrawerNavigator = ({ navigation }) => {
   const { storedCredentials, setStoredCredentials } = useContext(CredentialsContext);
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
+  const [Email, setEmail] = useState("");
   //UserView 
   const UserView = () => {
     // credentials context
@@ -55,17 +56,21 @@ const DrawerNavigator = ({ navigation }) => {
         const { FirstName, LastName, Email, Phone_No } = data;
         setFirstName(FirstName);
         setLastName(LastName);
+        setEmail(Email)
       }
       else if (!data) {
         const { name, email, photoUrl } = storedCredentials;
         setFirstName(name)
+        setEmail(Email)
       }
     })
     return (
-      <View style={{ backgroundColor: 'orange', height: 250, alignItems: 'center', justifyContent: 'center' }}>
-        <Avatar resizeMode="cover" source={AvatarImg} />
-        <Text>{FirstName +" "+ LastName}</Text>
-        <ExtraText>Follow us</ExtraText>
+      <View style={{ backgroundColor: '#fff', height: 150, justifyContent: "center", marginTop: 40 }}>
+        <View style={{ paddingHorizontal: 30 }}>
+          <Avatar source={AvatarImg} style={{ width: 80, height: 80, borderRadius: 1000, }} />
+          <Text style={{ marginLeft: 10, color: "#000000", fontSize: 15, fontWeight: "bold" }}>{FirstName + " " + LastName}</Text>
+          <Text style={{ marginLeft: 10, color: "#041869", fontSize: 13 }}>{Email}</Text>
+        </View>
       </View>
     )
   }
@@ -87,7 +92,7 @@ const DrawerNavigator = ({ navigation }) => {
         </DrawerContentScrollView>
         <DrawerItem label="Logout"
           icon={({ size, color }) => {
-            <MaterialIcons name="logout" size={size} color={color} />
+            <MaterialIcons name="home" size={size} color={color} />
           }}
           onPress={ClearLogin}
         />
@@ -103,19 +108,19 @@ const DrawerNavigator = ({ navigation }) => {
         headerShown: false,
         headerLeft: (Info) => (
           <Menu name="arrow-back-outline" size={28} color={Info.focused ? "#10B981" : "#000000"}
-            onPress={() => navigation.navigate("Profile")}
+            onPress={() => navigation.navigate("home")}
             style={{ marginLeft: 20 }}
           />
         )
       }}>
       <Drawer.Screen name="home" component={BottomTabNavigator}
         options={{
-          drawerLabel: "Home",
+          title: "Home",
           drawerIcon: ({ focused, size }) => (
             <Icon
               name="home"
-              size={27}
-              color={focused ? '#10B981' : '#ccc'}
+              size={25}
+              color={focused ? '#e33e39' : '#041869'}
             />
           ),
         }}
@@ -124,25 +129,24 @@ const DrawerNavigator = ({ navigation }) => {
         options={{
           headerShown: true,
           title: "Doner Registration",
-          headerTitleAlign: "center",
-
           drawerIcon: ({ focused, size }) => (
             <Icon
-              name="home"
-              size={27}
-              color={focused ? '#10B981' : '#ccc'}
+              name="registered"
+              size={25}
+              color={focused ? '#e33e39' : '#041869'}
             />
           ),
         }}
       />
       <Drawer.Screen name="Profile" component={Profile}
         options={{
-          drawerLabel: "Profile",
+          headerShown: true,
+          title: "Profile",
           drawerIcon: ({ focused, size }) => (
             <Icon
               name="user"
-              size={27}
-              color={focused ? '#10B981' : '#ccc'}
+              size={25}
+              color={focused ? '#e33e39' : '#041869'}
             />
           ),
         }}

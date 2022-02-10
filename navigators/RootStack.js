@@ -53,7 +53,7 @@ const MainStackNavigator = () => {
               <Stack.Screen name="GettingOrganData" component={GettingOrganData}
                 options={{
                   headerShown: true,
-                  title: "List of Organs",
+                  title: "Patient Needs",
                   headerStyle: {
                     backgroundColor: '#f4511e',
                   },

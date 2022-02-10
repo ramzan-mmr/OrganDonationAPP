@@ -5,12 +5,14 @@ import { CredentialsContext } from '../../components/CredentialsContext';
 // keyboard avoiding view
 import KeyboardAvoidingWrapper from './../../components/KeyboardAvoidingWrapper';
 //styles
-import { Avatar, ButtonText, Colors, Line, StyledButton, StyledFormArea } from '../../components/styles';
+import { Avatar, ButtonText, CardStyle, Colors, DonarStyledContainer, Line, StyledButton, StyledFormArea, VerticalLine } from '../../components/styles';
 //Icon
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 // Async storage
 import AsyncStorage from '@react-native-async-storage/async-storage';
-const { primary,darkLight } = Colors;
+import { fonts } from 'react-native-elements/dist/config';
+import axios from 'axios';
+const { primary, darkLight } = Colors;
 function Profile() {
   // const { name, email, photoUrl } = storedCredentials;
   // const AvatarImg = photoUrl ? { uri: photoUrl } : require('./../../assets/img/Logo.png');
@@ -20,12 +22,15 @@ function Profile() {
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
   const [Email, setEmail] = useState("");
-
   const { data, photoUrl } = storedCredentials;
   const AvatarImg = photoUrl ? { uri: photoUrl } : require('./../../assets/img/organlogo.jpg');
+  const [Donar, setDonar] = useState("")
+  const [status, setstatus] = useState(false);
+  const [ID, setID] = useState(data._id)
+
   useEffect(() => {
     if (data) {
-      console.log(data)
+      // console.log(data)
       const { FirstName, LastName, Email, Phone_No } = data;
       setFirstName(FirstName);
       setLastName(LastName);
@@ -37,7 +42,6 @@ function Profile() {
       setEmail(email)
     }
   })
-
   //For Logout
   const clearLogin = () => {
     AsyncStorage.removeItem('flowerCribCredentials')
@@ -46,15 +50,36 @@ function Profile() {
       })
       .catch((error) => console.log(error));
   };
+  const getDonarRegistration = () => {
+    const url = `http://mydonatmeapi.herokuapp.com/GetDonarData/${ID}`;
+    axios
+      .get(url)
+      .then(function (response) {
+        const result = response.data;
+        const { status, message, data } = result;
+        if (status !== 'SUCCESS') {
+          setstatus(false)
+        } else {
+          setDonar(...data)
+          setstatus(true)
+        }
+      })
+      .catch((error) => {
+        console.log(error.response.message)
+      })
+  }
+  useEffect(() => {
+    getDonarRegistration()
+  }, [])
   return (
     <>
       <SafeAreaView style={styles.container}>
         <View style={styles.innerContainer}>
-          <View style={{flexDirection:'row', alignItems:'center',paddingHorizontal:30,paddingBottom:10 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 30, paddingBottom: 10 }}>
             <View>
               <Avatar source={AvatarImg} />
             </View>
-            <View style={{marginLeft:15}}><Text style={styles.fullname}>{FirstName + " " + LastName}</Text></View>
+            <View style={{ marginLeft: 15 }}><Text style={styles.fullname}>{FirstName + " " + LastName}</Text></View>
           </View>
           <View style={styles.userInfoSection}>
             <View style={styles.row}>
@@ -75,6 +100,35 @@ function Profile() {
             </View>
           </View>
         </View>
+        {status && (
+          <View style={styles.Box}>
+            <View style={styles.inerBox}>
+              <Text style={styles.title}>{Donar.name}</Text>
+              <Text style={{ paddingTop: 5 }}>{Donar.organ}</Text>
+              <View style={styles.cardfooter}>
+                <View>
+                  <Text style={styles.subtitle}>Organ</Text>
+                  <Text>{Donar.organ}</Text>
+                </View>
+                <VerticalLine />
+                <View>
+                <Text style={styles.subtitle}>Age</Text>
+                  <Text>{Donar.Age}</Text>
+                </View>
+                <VerticalLine />
+                <View>
+                <Text style={styles.subtitle}>IsSelect</Text>
+                  {!Donar.IsSelect &&(
+                    <Text style={{ color: "#ffc107" }}>Pending</Text>
+                  )}
+                  {Donar.IsSelect &&(
+                    <Text style={{ color: "#3ea175" }}>Selected</Text>
+                  )}
+                </View>
+              </View>
+            </View>
+          </View>
+        )}
         <View style={styles.logoutSection}>
           <StyledFormArea>
             <Line />
@@ -96,18 +150,14 @@ const styles = StyleSheet.create({
     marginTop: 30,
     width: '100%'
   },
-  fullname:{
-    fontSize:17,
-    fontWeight:'bold',
-    color:'black'
+  fullname: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: 'black'
   },
   userInfoSection: {
     paddingHorizontal: 30,
     marginBottom: 5,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold'
   },
   caption: {
     fontSize: 14,
@@ -134,6 +184,42 @@ const styles = StyleSheet.create({
   },
   logoutSection: {
     alignItems: 'center'
+  },
+  Box: {
+    width: '100%',
+    height: 160,
+    padding: 10,
+    borderRadius: 10,
+  },
+  inerBox: {
+    flex: 1,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    shadowOpacity: 0.27,
+    elevation: 9,
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold'
+  },
+  subtitle: {
+    fontSize: 14,
+    fontWeight:'bold',
+    paddingBottom:5
+  },
+  cardfooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 10,
+  },
+  cardfooterdata: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 5
   }
 
 });

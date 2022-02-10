@@ -117,8 +117,8 @@ const Login = ({ navigation }) => {
 
   // Persisting login
   const persistLogin = (credentials, message, status) => {
-    console.log(message)
-    console.log(credentials);
+    // console.log(message)
+    // console.log(credentials);
     AsyncStorage.setItem('flowerCribCredentials', JSON.stringify(credentials))
       .then(() => {
         handleMessage(message, status);

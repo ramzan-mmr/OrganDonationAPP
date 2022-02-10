@@ -36,6 +36,7 @@ const { primary, secondary } = Colors;
 //screens 
 import GettingOrganData from './GettingOrganData';
 import axios from 'axios';
+import { Badge } from 'react-native-elements';
 
 
 const Welcome = ({ navigation }) => {
@@ -92,6 +93,9 @@ const Welcome = ({ navigation }) => {
     return (
       <View style={styles.Box}>
         <View style={styles.inerBox}>
+          <View style={{width:10, marginLeft:120}}>
+            <Badge value={7} status="primary" />
+          </View>
           <CardStyle onPress={() => navigation.navigate("GettingOrganData", { organName: item.organName })}>
             <CardImage source={{ uri: avatar }} />
             <CardText>{item.organName}</CardText>
@@ -101,22 +105,22 @@ const Welcome = ({ navigation }) => {
     )
   }
   return (
-    
-      <WelcomeStyledContainer>
-        <StatusBar style="dark" />
-        <OrganHeading>
-          <OrganHeadingText>Donate Able Organ</OrganHeadingText>
-        </OrganHeading>
-        <View style={styles.container}>
-          <FlatList
-            data={organ}
-            renderItem={renderItem}
-            keyExtractor={item => item._id}
-            numColumns={2}
-            showsVerticalScrollIndicator={false}
-          />
-        </View>
-      </WelcomeStyledContainer>
+
+    <WelcomeStyledContainer>
+      <StatusBar style="dark" />
+      <OrganHeading>
+        <OrganHeadingText>Donate Able Organ</OrganHeadingText>
+      </OrganHeading>
+      <View style={styles.container}>
+        <FlatList
+          data={organ}
+          renderItem={renderItem}
+          keyExtractor={item => item._id}
+          numColumns={2}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
+    </WelcomeStyledContainer>
   );
 };
 const styles = StyleSheet.create({
@@ -125,7 +129,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     padding: 15,
-    paddingBottom:160
+    paddingBottom: 160
   },
   Box: {
     width: '50%',

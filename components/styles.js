@@ -162,7 +162,12 @@ export const Line = styled.View`
   background-color: ${darkLight};
   margin-vertical: 10px;
 `;
-
+export const VerticalLine = styled.View`
+  height: 100%;
+  width: 1px;
+  background-color: ${darkLight};
+  margin-horizontal: 10px;
+`;
 export const StyledFormArea = styled.View`
   width: 90%;
 `;

@@ -61,6 +61,7 @@ function RegAsDoner({ navigation }) {
   const [messageType, setMessageType] = useState();
   const [pickerValue, setPickerValue] = useState("");
   const [organ, setOrgan] = useState([]);
+  const [Age,setAge]=useState("");
 
   //Actual Id of current user login
   const [id, setid] = useState("");
@@ -106,6 +107,7 @@ function RegAsDoner({ navigation }) {
   // Form handling API
   const handleSignup = (credentials, setSubmitting) => {
     handleMessage(null);
+    console.log(credentials)
     const url = 'https://mydonatmeapi.herokuapp.com/Donars';
     axios
       .post(url, credentials)
@@ -147,7 +149,17 @@ function RegAsDoner({ navigation }) {
         console.log(error)
       });
   };
-
+  function getAge(dateString) {
+    var today = new Date();
+    var birthDate = new Date(dateString);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    setAge(age)
+    return age;
+  }
   // Get current user id
   const { data } = storedCredentials;
   useEffect(() => {
@@ -161,7 +173,7 @@ function RegAsDoner({ navigation }) {
     return (
       <View>
         <Picker
-          style={{borderRadius:20,backgroundColor: secondary, height: 60,marginBottom: 10,marginVertical: 3}}
+          style={{ borderRadius: 20, backgroundColor: secondary, height: 60, marginBottom: 10, marginVertical: 3 }}
           selectedValue={pickerValue}
           onValueChange={(itemValue) => setPickerValue(itemValue)}
         >
@@ -172,6 +184,14 @@ function RegAsDoner({ navigation }) {
         </Picker>
       </View>
     );
+  }
+
+  function MapLocationPicker(){
+    return(
+      <View>
+      
+      </View>
+    )
   }
 
   return (
@@ -194,9 +214,9 @@ function RegAsDoner({ navigation }) {
           )}
 
           <Formik
-            initialValues={{ donarID: '', name: '', cnic: '', dateOfBirth: '', organ: '', phoneNo: '', address: '', description: '' }}
+            initialValues={{ donarID: '', name: '', cnic: '', dateOfBirth: '', organ: '', phoneNo: '', address: '', Age: '', description: '' }}
             onSubmit={(values, { setSubmitting }) => {
-              values = { ...values, dateOfBirth: dob, organ: pickerValue, donarID: id };
+              values = { ...values, dateOfBirth: dob, organ: pickerValue, donarID: id, Age:getAge(dob)};
               if (
                 values.donarID == '' ||
                 values.name == '' ||
