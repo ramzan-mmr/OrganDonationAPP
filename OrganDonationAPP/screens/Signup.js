@@ -218,7 +218,7 @@ const Signup = ({ navigation }) => {
 
                 {!isSubmitting && (
                   <StyledButton onPress={handleSubmit}>
-                    <ButtonText>Signup</ButtonText>
+                    <ButtonText>Sign Up</ButtonText>
                   </StyledButton>
                 )}
                 {isSubmitting && (

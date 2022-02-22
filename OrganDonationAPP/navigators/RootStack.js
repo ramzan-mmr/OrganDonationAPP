@@ -56,7 +56,7 @@ const MainStackNavigator = () => {
                   headerShown: true,
                   title: "Patient Needs",
                   headerStyle: {
-                    backgroundColor: '#f4511e',
+                    backgroundColor: brand,
                   },
                   headerTintColor: '#fff',
                   headerTitleStyle: {

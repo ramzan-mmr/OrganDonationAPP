@@ -180,7 +180,7 @@ const Login = ({ navigation }) => {
 
                 {!isSubmitting && (
                   <StyledButton onPress={handleSubmit}>
-                    <ButtonText>Login</ButtonText>
+                    <ButtonText >LOGIN</ButtonText>
                   </StyledButton>
                 )}
                 {isSubmitting && (
@@ -206,7 +206,7 @@ const Login = ({ navigation }) => {
                 <ExtraView>
                   <ExtraText>Don't have an account already? </ExtraText>
                   <TextLink onPress={() => navigation.navigate('Signup')}>
-                    <TextLinkContent>Signup</TextLinkContent>
+                    <TextLinkContent>Sign Up</TextLinkContent>
                   </TextLink>
                 </ExtraView>
               </StyledFormArea>

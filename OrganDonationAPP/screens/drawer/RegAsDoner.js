@@ -54,8 +54,9 @@ import { CredentialsContext } from './../../components/CredentialsContext';
 import { Button, Overlay } from 'react-native-elements'
 // Picker 
 import { Picker } from '@react-native-picker/picker';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-
+import MapView, { Marker, MarkerAnimated, PROVIDER_GOOGLE } from 'react-native-maps';
+// import * as Constants from 'expo-constants';
+// import * as Location from 'expo-location';
 
 const height = Dimensions.get('window').height
 function RegAsDoner({ navigation }) {
@@ -76,6 +77,9 @@ function RegAsDoner({ navigation }) {
       latitudeDelta: 0.015,
       longitudeDelta: 0.0121
     })
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [coordinate, setCoordinate] = ("")
   const mapView = React.useRef()
   //Actual Id of current user login
   const [id, setid] = useState("");
@@ -84,7 +88,7 @@ function RegAsDoner({ navigation }) {
 
   // credentials context
   const { storedCredentials, setStoredCredentials } = useContext(CredentialsContext);
- 
+
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(false);
@@ -277,8 +281,15 @@ function RegAsDoner({ navigation }) {
       </>
     )
   }
+  const onChangeValue = region => {
+    //  console.log(region)
+  }
+  function onRegionChange(e) {
+    // console.log(e.nativeEvent.coordinate)
+    setRegion(e.nativeEvent.coordinate)
+  }
+
   function RenderMap() {
-    console.log("renderMap")
     return (
       <View>
         <MapView
@@ -287,7 +298,17 @@ function RegAsDoner({ navigation }) {
           loadingEnabled={true}
           provider={PROVIDER_GOOGLE}
           initialRegion={region}
+          mapType="standard"
+          zoomEnabled={true}
+          onRegionChangeComplete={onChangeValue}
+          onPress={(e) => onRegionChange(e)}
         >
+          <Marker draggable={true} coordinate={{
+            latitude: region.latitude,
+            longitude: region.longitude
+          }}
+            title="location"
+          />
         </MapView>
       </View>
     )
@@ -313,6 +334,10 @@ function RegAsDoner({ navigation }) {
       </View>
     )
   }
+  //Get Permission from the user to select his current location
+  useEffect(() => {
+    console.log("Location permision ")
+  })
   const toggleOverlay = () => {
     setVisible(!visible);
   };

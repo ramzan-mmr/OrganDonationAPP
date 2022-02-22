@@ -72,7 +72,7 @@ const GettingOrganData = ({ route, navigation }) => {
                 <View style={styles.inerBox}>
                   <View style={styles.inerBoxHeader}>
                     <View style={{ marginEnd: 20 }}>
-                      <Avatar source={require("./../assets/img/expo-bg1.png")} />
+                      <Avatar source={require("./../assets/profile.png")} />
                     </View>
                     <Text style={styles.title}>{l.PatName}</Text>
                   </View>

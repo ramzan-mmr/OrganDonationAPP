@@ -22,7 +22,7 @@ import Menu from 'react-native-vector-icons/Ionicons';
 import { Colors } from '../components/styles';
 import { FastField } from "formik";
 import Welcome from "../screens/Welcome";
-const { tabBar, secondary, darkLight, red, primary,tertiary } = Colors
+const { tabBar, secondary, darkLight, red, primary,tertiary,brand } = Colors
 
 const Tab = createBottomTabNavigator();
 const HomeTab = createBottomTabNavigator();
@@ -37,6 +37,9 @@ const BottomTabNavigator = ({ navigation }) => {
         borderRadius: 15,
         height: 60,
       },
+      headerStyle:{
+        backgroundColor:brand
+      },
       headerRight: (tabInfo) => (
         <Menu name="md-menu" size={28} color={tabInfo.focused ? "#10B981" : "#8e8e93"}
           onPress={() => navigation.openDrawer()}
@@ -49,7 +52,7 @@ const BottomTabNavigator = ({ navigation }) => {
           options={{
             tabBarLabel: "Home",
             tabBarIcon: (tabInfo) => (
-              <Icon name="home" size={28} color={tabInfo.focused ? "#10B981" : "#8e8e93"} />
+              <Icon name="home" size={28} color={tabInfo.focused ? brand : "#8e8e93"} />
             )
           }}
         />
@@ -57,7 +60,7 @@ const BottomTabNavigator = ({ navigation }) => {
           options={{
             tabBarLabel: "Search",
             tabBarIcon: (tabInfo) => (
-              <Icon name="search" size={28} color={tabInfo.focused ? "#10B981" : "#8e8e93"} />
+              <Icon name="search" size={28} color={tabInfo.focused ? brand : "#8e8e93"} />
             )
           }}
         />
@@ -65,14 +68,14 @@ const BottomTabNavigator = ({ navigation }) => {
           options={{
             tabBarLabel: "Notification",
             tabBarIcon: (tabInfo) => (
-              <Icon name="bell" size={28} color={tabInfo.focused ? "#10B981" : "#8e8e93"} />
+              <Icon name="bell" size={28} color={tabInfo.focused ? brand : "#8e8e93"} />
             )
           }}
         />
         <Tab.Screen name="Profile" component={Profile}
           options={{
             tabBarIcon: (tabInfo) => (
-              <Icon name="user" size={28} color={tabInfo.focused ? "#10B981" : "#8e8e93"}/>
+              <Icon name="user" size={28} color={tabInfo.focused ? brand : "#8e8e93"}/>
             )
           }}
         />
