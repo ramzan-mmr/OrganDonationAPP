@@ -10,14 +10,15 @@ export const Colors = {
   secondary: '#E5E7EB',
   tertiary: '#1F2937',
   darkLight: '#9CA3AF',
-  brand: '#6D28D9',
+  brand: '#f13c20',
   green: '#10B981',
   red: '#EF4444',
   tabBar: '#E30425',
-  orange: '#f4511e'
+  orange: '#f4511e',
+  blue: '#0e46ad',
 };
 
-const { primary, secondary, tertiary, darkLight, brand, green, red } = Colors;
+const { primary, secondary, tertiary, darkLight, brand, green, red,blue } = Colors;
 
 export const StyledContainer = styled.View`
   flex: 1;
@@ -99,6 +100,18 @@ export const StyledTextInput = styled.TextInput`
   margin-bottom: 10px;
   color: ${tertiary};
 `;
+export const StyledButtonLocation = styled.TouchableOpacity`
+  background-color: ${secondary};
+  padding: 15px;
+  padding-left: 55px;
+  padding-right: 55px;
+  border-radius: 5px;
+  font-size: 16px;
+  height: 60px;
+  margin-vertical: 3px;
+  margin-bottom: 10px;
+  color: ${tertiary};
+`;
 
 export const StyledInputLabel = styled.Text`
   color: ${tertiary};
@@ -128,11 +141,12 @@ export const StyledButton = styled.TouchableOpacity`
   border-radius: 5px;
   margin-vertical: 5px;
   height: 60px;
+  fontWeight:bold
 
   ${(props) =>
     props.google == true &&
     `
-    background-color: ${green};
+    background-color: ${blue};
     flex-direction: row;
     justify-content: center;
   `}
@@ -153,7 +167,7 @@ export const ButtonText = styled.Text`
 export const MsgBox = styled.Text`
   text-align: center;
   font-size: 13px;
-  color: ${props => props.type == "SUCCESS" ? green : red};
+  color: ${props => props.type == "SUCCESS" ? blue : red};
 `;
 
 export const Line = styled.View`

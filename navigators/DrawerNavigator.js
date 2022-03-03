@@ -27,15 +27,14 @@ import { useWindowDimensions, View, Image, Text, styles } from "react-native";
 
 // credentials context
 import { CredentialsContext } from './../components/CredentialsContext';
-import { Colors } from "react-native/Libraries/NewAppScreen";
 
 // Async storage
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //style from component
 import { ExtraText, Avatar } from '../components/styles';
-
-const { orange } = Colors;
+import { Colors } from '../components/styles';
+const { tabBar, secondary, darkLight, red, primary,tertiary,brand } = Colors
 const Drawer = createDrawerNavigator();
 
 
@@ -111,7 +110,10 @@ const DrawerNavigator = ({ navigation }) => {
             onPress={() => navigation.navigate("home")}
             style={{ marginLeft: 20 }}
           />
-        )
+        ),
+        headerStyle:{
+            backgroundColor:brand
+          }
       }}>
       <Drawer.Screen name="home" component={BottomTabNavigator}
         options={{

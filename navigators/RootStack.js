@@ -20,6 +20,7 @@ const Stack = createNativeStackNavigator();
 // credentials context
 import { CredentialsContext } from './../components/CredentialsContext';
 import DrawerNavigator from './DrawerNavigator';
+import Map from '../components/Map';
 
 const MainStackNavigator = () => {
   return (
@@ -55,13 +56,13 @@ const MainStackNavigator = () => {
                   headerShown: true,
                   title: "Patient Needs",
                   headerStyle: {
-                    backgroundColor: '#f4511e',
+                    backgroundColor: brand,
                   },
                   headerTintColor: '#fff',
                   headerTitleStyle: {
                     fontWeight: 'bold',
                   },
-                  headerTitleAlign:'center'
+                  headerTitleAlign: 'center'
                 }}
               />
             </>

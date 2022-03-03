@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 
 //Screens 
-import Welcome from './../Welcome';
+import Map from "../../components/Map"
 
 // formik
 import { Formik } from 'formik';
@@ -26,8 +26,9 @@ import {
   TextLinkContent,
   SubTitle,
   Colors,
+  StyledButtonLocation
 } from './../../components/styles';
-import { View, TouchableOpacity, ActivityIndicator, Modal, StyleSheet, Text } from 'react-native';
+import { View, TouchableOpacity, ActivityIndicator, Modal, StyleSheet, Text, Dimensions } from 'react-native';
 
 //colors
 const { darkLight, brand, primary, secondary, tertiary } = Colors;
@@ -49,10 +50,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // credentials context
 import { CredentialsContext } from './../../components/CredentialsContext';
-
+//Overlay from react native elements 
+import { Button, Overlay } from 'react-native-elements'
 // Picker 
 import { Picker } from '@react-native-picker/picker';
-
+import MapView, { Marker, MarkerAnimated, PROVIDER_GOOGLE } from 'react-native-maps';
+import * as Location from 'expo-location'
+const height = Dimensions.get('window').height
 function RegAsDoner({ navigation }) {
   const [hidePassword, setHidePassword] = useState(true);
   const [show, setShow] = useState(false);
@@ -61,8 +65,23 @@ function RegAsDoner({ navigation }) {
   const [messageType, setMessageType] = useState();
   const [pickerValue, setPickerValue] = useState("");
   const [organ, setOrgan] = useState([]);
-  const [Age,setAge]=useState("");
-
+  const [Age, setAge] = useState("");
+  const [visible, setVisible] = useState(false);
+  const [overlay, setOverlay] = useState([]);
+  const [region, setRegion] = useState(
+    {
+      latitude: 24.846531,
+      longitude: 67.055418
+    })
+    //marker pin 
+    const [pin, setPin] = useState({
+      latitude: 24.846531,
+      longitude: 67.055418
+  })
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [coordinate, setCoordinate] = ("")
+  const mapView = React.useRef()
   //Actual Id of current user login
   const [id, setid] = useState("");
   // Actual value to be sent
@@ -135,7 +154,6 @@ function RegAsDoner({ navigation }) {
     setMessage(message);
     setMessageType(type);
   };
-
   // Persisting login after signup
   const persistLogin = (credentials, message, status) => {
     AsyncStorage.setItem('flowerCribCredentials', JSON.stringify(credentials))
@@ -185,15 +203,175 @@ function RegAsDoner({ navigation }) {
       </View>
     );
   }
+  function ZoomIn() {
+    let newRegion = {
+      latitude: region.latitude,
+      longitude: region.longitude,
+      latitudeDelta: region.latitudeDelta / 2,
+      longitudeDelta: region.longitudeDelta / 2
+    }
+    setRegion(newRegion)
+    mapView.current.animateToRegion(newRegion, 200)
+  }
+  function ZoomOut() {
+    let newRegion = {
+      latitude: region.latitude,
+      longitude: region.longitude,
+      latitudeDelta: region.latitudeDelta * 2,
+      longitudeDelta: region.longitudeDelta * 2
+    }
 
-  function MapLocationPicker(){
-    return(
+    setRegion(newRegion)
+    mapView.current.animateToRegion(newRegion, 200)
+  }
+  function RenderButton() {
+    return (
+      <>
+        <View style={{
+          position: 'absolute',
+          top: "70%",
+          left: "80%",
+          width: 60,
+          height: 130,
+          justifyContent: 'space-between',
+
+        }}>
+          {/* Current Location  */}
+          <TouchableOpacity
+            style={{
+              width: 60,
+              height: 60,
+              borderRadius: 30,
+              backgroundColor: "#ffffff",
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text style={{ fontSize: 30 }}><Octicons name='location' size={30} color={"#000"} /></Text>
+          </TouchableOpacity>
+          {/* Zoom in */}
+          <TouchableOpacity
+            style={{
+              width: 60,
+              height: 60,
+              borderRadius: 30,
+              backgroundColor: "#ffffff",
+              alignItems: 'center',
+              justifyContent: 'center'
+            }} onPress={() => ZoomIn()}
+          >
+            <Text style={{ fontSize: 30 }}>+</Text>
+          </TouchableOpacity>
+          {/* Zoom out */}
+          <TouchableOpacity
+            style={{
+              width: 60,
+              height: 60,
+              borderRadius: 30,
+              backgroundColor: "#ffffff",
+              alignItems: 'center',
+              justifyContent: 'center'
+            }} onPress={() => ZoomOut()}>
+            <Text style={{ fontSize: 30 }}>-</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ position: 'absolute', width: '100%', top: '93%' }}>
+          <StyledButton>
+            <Text>Chose location</Text>
+          </StyledButton>
+        </View>
+      </>
+    )
+  }
+  const onPressOnMap = e => {
+    setPin({
+      latitude:e.nativeEvent.coordinate.latitude,
+      longitude:e.nativeEvent.coordinate.longitude
+    })
+  }
+  const onRegionChange = (e) => {
+
+  }
+  const onMarkerDragValue = (e) => {
+
+  }
+  function RenderMap() {
+    return (
       <View>
-      
+        <MapView
+          ref={mapView}
+          style={styles.map}
+          loadingEnabled={true}
+          provider={PROVIDER_GOOGLE}
+          initialRegion={{
+            latitude: region.latitude,
+            longitude: region.longitude,
+            latitudeDelta: 0.015,
+            longitudeDelta: 0.0121
+          }}
+          mapType="standard"
+          zoomEnabled={true}
+          onPress={(e)=>onPressOnMap(e)}
+        >
+          <Marker draggable={true} coordinate={{
+            latitude: pin.latitude,
+            longitude: pin.longitude
+          }}
+            title="location"
+          />
+        </MapView>
       </View>
     )
   }
+  const LocationPicker = () => {
+    return (
+      <View>
+        <View>
+          <LeftIcon>
+            <Octicons name='location' size={30} color={brand} style={{ marginTop: -20 }} />
+          </LeftIcon>
+        </View>
+        <StyledButtonLocation onPress={toggleOverlay}>
+          <Text>Please select your location</Text>
+        </StyledButtonLocation>
 
+        <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
+          <View style={styles.overlay}>
+            {RenderMap()}
+            {RenderButton()}
+          </View>
+        </Overlay>
+      </View>
+    )
+  }
+  //Get Permission from the user to select his current location
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+      const { latitude, longitude } = location.coords;
+      setRegion({
+        latitude,
+        longitude
+      })
+
+    })();
+  }, []);
+
+  let text = 'Waiting..';
+  if (errorMsg) {
+    alert(errorMsg)
+  } else if (location) {
+    // const result = JSON.stringify(location)
+  }
+  const toggleOverlay = () => {
+    setVisible(!visible);
+  };
   return (
     <KeyboardAvoidingWrapper>
       <DonarStyledContainer>
@@ -216,7 +394,7 @@ function RegAsDoner({ navigation }) {
           <Formik
             initialValues={{ donarID: '', name: '', cnic: '', dateOfBirth: '', organ: '', phoneNo: '', address: '', Age: '', description: '' }}
             onSubmit={(values, { setSubmitting }) => {
-              values = { ...values, dateOfBirth: dob, organ: pickerValue, donarID: id, Age:getAge(dob)};
+              values = { ...values, dateOfBirth: dob, organ: pickerValue, donarID: id, Age: getAge(dob) };
               if (
                 values.donarID == '' ||
                 values.name == '' ||
@@ -295,6 +473,8 @@ function RegAsDoner({ navigation }) {
                   value={values.address}
                   icon="mail"
                 />
+                <StyledInputLabel>Select Your Location</StyledInputLabel>
+                <LocationPicker />
                 <MyTextInput
                   label="description"
                   placeholder="Your description in Detail"
@@ -348,7 +528,15 @@ const MyTextInput = ({ label, icon, isDate, showDatePicker, ...props }) => {
 }
 
 const styles = StyleSheet.create({
-
+  overlay: {
+    flex: 1,
+    width: "100%",
+    minWidth: "100%",
+    height: "100%",
+  },
+  map: {
+    height
+  }
 })
 
 export default RegAsDoner;

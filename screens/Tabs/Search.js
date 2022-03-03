@@ -89,7 +89,10 @@ const Search = () => {
     <KeyboardAvoidingWrapper>
       <View>
         <SearchBar
-          placeholder="Type Here..."
+          inputStyle={{ backgroundColor: 'white' }}
+          containerStyle={{ backgroundColor: 'white', borderWidth: 1, borderRadius: 5 }}
+          inputContainerStyle={{ backgroundColor: 'white' }}
+          placeholder="Tap to search..."
           onChangeText={(value) => { setSearch(value), searchFilterFunction(value) }}
           value={search}
         />
@@ -104,7 +107,7 @@ const Search = () => {
               }}
               onPress={() => toggleOverlay(setOverlay(l))}
             >
-              <Avatar source={require("./../../assets/img/expo-bg1.png")} />
+              <Avatar source={require("./../../assets/profile.png")} />
               <ListItem.Content >
                 <ListItem.Title>{l.Name}</ListItem.Title>
               </ListItem.Content>
